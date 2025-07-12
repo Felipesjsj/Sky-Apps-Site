@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sky Apps - Bots Discord Profissionais</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#3B82F6",
+              secondary: "#60A5FA",
+              dark: "#000000",
+              darker: "#000000",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .animated-bg {
+        background: #000000;
+        position: relative;
+        overflow: hidden;
+      }
+      .animated-bg::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(
+            4px 4px at 20px 30px,
+            #1e3a8a,
+            transparent
+          ),
+          radial-gradient(4px 4px at 40px 70px, #1e40af, transparent),
+          radial-gradient(3px 3px at 90px 40px, #1e3a8a, transparent),
+          radial-gradient(3px 3px at 130px 80px, #1e40af, transparent),
+          radial-gradient(4px 4px at 160px 30px, #1e3a8a, transparent),
+          radial-gradient(3px 3px at 200px 60px, #1e40af, transparent),
+          radial-gradient(4px 4px at 250px 20px, #1e3a8a, transparent);
+        background-repeat: repeat;
+        background-size: 300px 150px;
+        animation: sparkle 2.5s linear infinite;
+        pointer-events: none;
+      }
+      @keyframes sparkle {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 0.9;
+        }
+      }
+
+      /* Sistema de Navegação */
+      .nav-helper {
+        position: fixed;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .nav-btn {
+        background: #1e3a8a;
+        color: white;
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
+      }
+      .nav-btn:hover,
+      .nav-btn:focus {
+        background: #3b82f6;
+        transform: scale(1.1);
+        outline: none;
+      }
+      .scroll-indicator {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1e3a8a;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 14px;
+        z-index: 1000;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body class="animated-bg text-white">
+    <!-- Sistema de Navegação -->
+    <div class="nav-helper">
+      <button
+        class="nav-btn"
+        onclick="scrollToTop()"
+        title="Ir para o topo (Tecla: Home)"
+      >
+        <i class="fas fa-arrow-up"></i>
+      </button>
+      <button class="nav-btn" onclick="scrollUp()" title="Subir (Tecla: ↑)">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+      <button class="nav-btn" onclick="scrollDown()" title="Descer (Tecla: ↓)">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <button
+        class="nav-btn"
+        onclick="scrollToBottom()"
+        title="Ir para o final (Tecla: End)"
+      >
+        <i class="fas fa-arrow-down"></i>
+      </button>
+    </div>
+
+    <div class="scroll-indicator">Use ↑↓ ou clique nos botões para navegar</div>
+    <!-- Navigation -->
+    <nav
+      class="bg-black/95 backdrop-blur-sm fixed w-full z-50 border-b border-blue-500/20"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <h2
+                class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+              >
+                Sky Apps
+              </h2>
+            </div>
+          </div>
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-8">
+              <a
+                href="index.html"
+                class="hover:text-primary transition-colors duration-300"
+                >Início</a
+              >
+              <a
+                href="planos.html"
+                class="hover:text-primary transition-colors duration-300"
+                >Planos</a
+              >
+              <a
+                href="perguntas.html"
+                class="hover:text-primary transition-colors duration-300"
+                >FAQ</a
+              >
+              <a
+                href="https://discord.gg/38Ef5TVMGR"
+                class="hover:text-primary transition-colors duration-300"
+                >Discord</a
+              >
+              <a
+                href="login.html"
+                class="bg-primary hover:bg-blue-600 px-4 py-2 rounded-lg transition-colors duration-300"
+                >Login</a
+              >
+            </div>
+          </div>
+          <div class="md:hidden">
+            <button class="text-gray-300 hover:text-white">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section
+      id="inicio"
+      class="pt-20 pb-16 bg-gradient-to-br from-black via-black/30 to-black"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">
+          Transforme seu Discord em uma Máquina de Lucro
+        </h1>
+        <p class="text-xl md:text-2xl text-white mb-8 max-w-4xl mx-auto">
+          Automatize vendas, proteja sua comunidade e maximize seus resultados
+          com nossos bots profissionais. Tudo em uma única plataforma, pelo
+          melhor custo-benefício do mercado.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            onclick="checkDiscordAndStart()"
+            class="bg-black border border-primary text-white hover:bg-primary px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+          >
+            Começar Agora
+          </button>
+          <button
+            onclick="openCrisp()"
+            class="border border-primary text-primary hover:bg-primary hover:text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300"
+          >
+            Falar Conosco
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nossos Recursos -->
+    <section class="py-20 bg-black/50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2
+          class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+        >
+          Nossos Recursos
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            class="bg-black/30 p-6 rounded-xl border border-blue-500/30 hover:border-primary transition-all duration-300 transform hover:scale-105"
+          >
+            <div class="text-primary text-3xl mb-4">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Verificação Avançada</h3>
+            <p class="text-white">
+              Sistema de verificação robusto para proteger sua comunidade contra
+              spam e usuários maliciosos.
+            </p>
+          </div>
+          <div
+            class="bg-black/30 p-6 rounded-xl border border-blue-500/30 hover:border-primary transition-all duration-300 transform hover:scale-105"
+          >
+            <div class="text-primary text-3xl mb-4">
+              <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Vendas Automatizadas</h3>
+            <p class="text-white">
+              Automatize todo o processo de vendas, desde o pagamento até a
+              entrega do produto.
+            </p>
+          </div>
+          <div
+            class="bg-black/30 p-6 rounded-xl border border-blue-500/30 hover:border-primary transition-all duration-300 transform hover:scale-105"
+          >
+            <div class="text-primary text-3xl mb-4">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Analytics Detalhado</h3>
+            <p class="text-white">
+              Acompanhe métricas importantes e tome decisões baseadas em dados
+              reais.
+            </p>
+          </div>
+          <div
+            class="bg-black/30 p-6 rounded-xl border border-blue-500/30 hover:border-primary transition-all duration-300 transform hover:scale-105"
+          >
+            <div class="text-primary text-3xl mb-4">
+              <i class="fas fa-users"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Gestão de Membros</h3>
+            <p class="text-white">
+              Gerencie sua comunidade com ferramentas avançadas de moderação e
+              organização.
+            </p>
+          </div>
+          <div
+            class="bg-black/30 p-6 rounded-xl border border-blue-500/30 hover:border-primary transition-all duration-300 transform hover:scale-105"
+          >
+            <div class="text-primary text-3xl mb-4">
+              <i class="fas fa-cog"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Personalização Total</h3>
+            <p class="text-white">
+              Configure todos os aspectos dos bots de acordo com suas
+              necessidades específicas.
+            </p>
+          </div>
+          <div
+            class="bg-black/30 p-6 rounded-xl border border-blue-500/30 hover:border-primary transition-all duration-300 transform hover:scale-105"
+          >
+            <div class="text-primary text-3xl mb-4">
+              <i class="fas fa-headset"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Suporte 24/7</h3>
+            <p class="text-white">
+              Nossa equipe está sempre disponível para ajudar você a maximizar
+              seus resultados.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bot de Verificação -->
+    <section class="py-20 bg-gradient-to-r from-black to-black/30">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 class="text-4xl font-bold mb-6 text-primary">
+              Bot de Verificação | OAuth2 Discord
+            </h2>
+            <h3 class="text-2xl font-semibold mb-4">
+              Que tal uma verificação?
+            </h3>
+            <p class="text-lg text-white mb-8">
+              Garanta a segurança do seu servidor com nosso sistema de
+              verificação avançado, projetado para proteger sua comunidade
+              contra invasores e usuários maliciosos.
+            </p>
+            <div class="bg-black/30 p-6 rounded-xl border border-blue-500/30">
+              <h4 class="text-xl font-semibold mb-4 text-primary">
+                OAuth2 Discord
+              </h4>
+              <p class="text-white">
+                Nosso sistema utiliza a autenticação OAuth2 oficial do Discord,
+                garantindo máxima segurança e confiabilidade. Os usuários são
+                verificados de forma automática e segura, sem comprometer a
+                experiência da comunidade.
+              </p>
+            </div>
+          </div>
+          <div class="flex justify-center">
+            <img
+              src="https://primeapps.vercel.app/RoboApresentando%20(1).png"
+              alt="Bot de Verificação"
+              class="rounded-xl shadow-2xl border border-blue-500/30 max-w-md w-full"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bot de Vendas -->
+    <section class="py-20 bg-black/50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="order-2 lg:order-1 flex justify-center">
+            <img
+              src="https://primeapps.vercel.app/RoboDinheiro.png"
+              alt="Bot de Vendas"
+              class="rounded-xl shadow-2xl border border-blue-500/30 max-w-md w-full"
+            />
+          </div>
+          <div class="order-1 lg:order-2">
+            <h2 class="text-4xl font-bold mb-6 text-primary">
+              Bot de Vendas | Automatize e Lucre
+            </h2>
+            <h3 class="text-2xl font-semibold mb-4">
+              Quer lucrar com seu servidor?
+            </h3>
+            <p class="text-lg text-white mb-8">
+              Automatize suas vendas com nosso bot e transforme seu servidor em
+              uma máquina de lucro. Processe pagamentos, entregue produtos e
+              gerencie clientes automaticamente.
+            </p>
+            <div class="bg-black/30 p-6 rounded-xl border border-blue-500/30">
+              <h4 class="text-xl font-semibold mb-4 text-primary">
+                Sistema de Vendas Completo
+              </h4>
+              <p class="text-white">
+                Nosso bot de vendas oferece integração com principais gateways
+                de pagamento, entrega automática de produtos digitais, sistema
+                de cupons, relatórios detalhados e muito mais. Tudo para
+                maximizar suas vendas e lucros.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparação de Preços -->
+    <section class="py-20 bg-gradient-to-br from-black/30 to-black">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2
+            class="text-4xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+          >
+            Economize o seu tempo e dinheiro
+          </h2>
+          <p class="text-xl text-white max-w-3xl mx-auto">
+            Simplifique sua gestão e maximize seus resultados com nossos planos
+            personalizados.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <div class="bg-green-900/20 p-6 rounded-xl border border-green-500">
+            <div class="text-green-400 text-3xl mb-4">
+              <i class="fas fa-clock"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 text-green-400">
+              Economize tempo
+            </h3>
+            <p class="text-white">
+              Automação total do seu servidor com apenas alguns cliques
+            </p>
+          </div>
+          <div class="bg-blue-900/20 p-6 rounded-xl border border-blue-500">
+            <div class="text-blue-400 text-3xl mb-4">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 text-blue-400">
+              Economize dinheiro
+            </h3>
+            <p class="text-white">
+              Custo-benefício superior aos concorrentes do mercado
+            </p>
+          </div>
+          <div class="bg-purple-900/20 p-6 rounded-xl border border-purple-500">
+            <div class="text-purple-400 text-3xl mb-4">
+              <i class="fas fa-gem"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 text-purple-400">
+              Mais valor com menos custo
+            </h3>
+            <p class="text-white">
+              Todos os recursos necessários em um único plano completo
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Outras Soluções -->
+          <div class="bg-red-900/10 p-8 rounded-xl border border-red-500/30">
+            <h3 class="text-2xl font-bold mb-6 text-red-400">
+              Outras Soluções
+            </h3>
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <i class="fas fa-times text-red-400 mr-3"></i>
+                <span class="text-white"
+                  >Múltiplas ferramentas necessárias</span
+                >
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-times text-red-400 mr-3"></i>
+                <span class="text-white"
+                  >Planos separados para cada função</span
+                >
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-times text-red-400 mr-3"></i>
+                <span class="text-white"
+                  >Gastos de até R$10,00/mês com ferramentas separadas</span
+                >
+              </div>
+            </div>
+            <div class="mt-6 text-center">
+              <span class="text-red-400 font-semibold"
+                >Mais completo pelo menor preço</span
+              >
+            </div>
+          </div>
+
+          <!-- Prime Applications -->
+          <div
+            class="bg-primary/10 p-8 rounded-xl border border-primary/30 relative"
+          >
+            <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+              <span
+                class="bg-primary px-4 py-2 rounded-full text-sm font-semibold"
+                >RECOMENDADO</span
+              >
+            </div>
+            <h3 class="text-2xl font-bold mb-6 text-primary">Sky Apps</h3>
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <i class="fas fa-check text-green-400 mr-3"></i>
+                <span class="text-white">Tudo em uma única plataforma</span>
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-check text-green-400 mr-3"></i>
+                <span class="text-white"
+                  >Plano completo com tudo para vendas</span
+                >
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-check text-green-400 mr-3"></i>
+                <span class="text-white">Tudo isso por apenas R$5,50/mês</span>
+              </div>
+            </div>
+            <div class="mt-6 text-center">
+              <div class="text-3xl font-bold text-blue-400 mb-2">
+                R$ 5,50<span class="text-lg text-gray-300">/mês</span>
+              </div>
+              <button
+                class="bg-primary hover:bg-blue-600 px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+              >
+                Escolher Plano
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-primary to-secondary">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-4xl font-bold mb-6">Pronto para começar?</h2>
+        <p class="text-xl mb-8 opacity-90">
+          Junte-se a milhares de servidores que já transformaram suas
+          comunidades em negócios lucrativos. Comece hoje mesmo e veja a
+          diferença em poucos dias.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            class="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+          >
+            Começar Gratuitamente
+          </button>
+          <button
+            class="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300"
+          >
+            Falar com Especialista
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-blue-500/20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div class="col-span-1 md:col-span-2">
+            <h3 class="text-2xl font-bold text-blue-400 mb-4">Sky Apps</h3>
+            <p class="text-gray-300 mb-6 max-w-md">
+              Transformamos servidores Discord em negócios lucrativos através de
+              automação inteligente e ferramentas profissionais de última
+              geração.
+            </p>
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="text-gray-300 hover:text-primary transition-colors duration-300"
+              >
+                <i class="fab fa-discord text-2xl"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-300 hover:text-primary transition-colors duration-300"
+              >
+                <i class="fab fa-twitter text-2xl"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-300 hover:text-primary transition-colors duration-300"
+              >
+                <i class="fab fa-instagram text-2xl"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-300 hover:text-primary transition-colors duration-300"
+              >
+                <i class="fab fa-youtube text-2xl"></i>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4 text-primary">Links Good</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="index.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Início</a
+                >
+              </li>
+              <li>
+                <a
+                  href="planos.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Planos</a
+                >
+              </li>
+              <li>
+                <a
+                  href="perguntas.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >FAQ</a
+                >
+              </li>
+              <li>
+                <a
+                  href="dashboard.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Dashboard</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4 text-primary">Suporte</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Documentação</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Tutoriais</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >FAQ</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Contato</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="border-t border-blue-500/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center"
+        >
+          <p class="text-gray-300 text-sm">
+            © 2024 Sky Apps. Todos os direitos reservados.
+          </p>
+          <div class="flex space-x-6 mt-4 md:mt-0">
+            <a
+              href="#"
+              class="text-gray-300 hover:text-white text-sm transition-colors duration-300"
+              >Termos de Uso</a
+            >
+            <a
+              href="#"
+              class="text-gray-300 hover:text-white text-sm transition-colors duration-300"
+              >Política de Privacidade</a
+            >
+            <a
+              href="#"
+              class="text-gray-300 hover:text-white text-sm transition-colors duration-300"
+              >Cookies</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Sistema de Navegação
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function scrollToBottom() {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+
+      function scrollUp() {
+        window.scrollBy({ top: -300, behavior: "smooth" });
+      }
+
+      function scrollDown() {
+        window.scrollBy({ top: 300, behavior: "smooth" });
+      }
+
+      // Navegação por teclado
+      document.addEventListener("keydown", function (e) {
+        switch (e.key) {
+          case "ArrowUp":
+            e.preventDefault();
+            scrollUp();
+            break;
+          case "ArrowDown":
+            e.preventDefault();
+            scrollDown();
+            break;
+          case "Home":
+            e.preventDefault();
+            scrollToTop();
+            break;
+          case "End":
+            e.preventDefault();
+            scrollToBottom();
+            break;
+          case "PageUp":
+            e.preventDefault();
+            window.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
+            break;
+          case "PageDown":
+            e.preventDefault();
+            window.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+            break;
+        }
+      });
+
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Esconder indicador após alguns segundos
+      setTimeout(() => {
+        const indicator = document.querySelector(".scroll-indicator");
+        if (indicator) {
+          indicator.style.opacity = "0";
+          setTimeout(() => indicator.remove(), 500);
+        }
+      }, 5000);
+
+      // Mobile menu toggle
+      const mobileMenuButton = document.querySelector(".md\\:hidden button");
+      if (mobileMenuButton) {
+        mobileMenuButton.addEventListener("click", () => {
+          console.log("Mobile menu clicked");
+        });
+      }
+
+      // Função para verificar Discord e começar
+      function checkDiscordAndStart() {
+        alert(
+          "Para começar, você precisa ter uma conta no Discord. Redirecionando para verificação..."
+        );
+        // Aqui você pode adicionar o link de verificação do Discord quando tiver
+        // window.open('LINK_DE_VERIFICACAO_DISCORD', '_blank');
+      }
+
+      // Função para abrir Crisp
+      function openCrisp() {
+        // Inicializar Crisp se não estiver carregado
+        if (typeof $crisp !== "undefined") {
+          $crisp.push(["do", "chat:open"]);
+        } else {
+          // Carregar Crisp se não estiver carregado
+          window.$crisp = [];
+          window.CRISP_WEBSITE_ID = "SEU_CRISP_ID_AQUI"; // Substitua pelo seu ID do Crisp
+
+          const script = document.createElement("script");
+          script.src = "https://client.crisp.chat/l.js";
+          script.async = 1;
+          document.getElementsByTagName("head")[0].appendChild(script);
+
+          setTimeout(() => {
+            if (typeof $crisp !== "undefined") {
+              $crisp.push(["do", "chat:open"]);
+            }
+          }, 1000);
+        }
+      }
+    </script>
+  </body>
+</html>

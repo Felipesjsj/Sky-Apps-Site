@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FAQ - Sky Apps</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#3B82F6",
+              secondary: "#60A5FA",
+              dark: "#000000",
+              darker: "#000000",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .animated-bg {
+        background: #000000;
+        position: relative;
+        overflow: hidden;
+      }
+      .animated-bg::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(
+            4px 4px at 20px 30px,
+            #1e3a8a,
+            transparent
+          ),
+          radial-gradient(4px 4px at 40px 70px, #1e40af, transparent),
+          radial-gradient(3px 3px at 90px 40px, #1e3a8a, transparent),
+          radial-gradient(3px 3px at 130px 80px, #1e40af, transparent),
+          radial-gradient(4px 4px at 160px 30px, #1e3a8a, transparent),
+          radial-gradient(3px 3px at 200px 60px, #1e40af, transparent),
+          radial-gradient(4px 4px at 250px 20px, #1e3a8a, transparent);
+        background-repeat: repeat;
+        background-size: 300px 150px;
+        animation: sparkle 2.5s linear infinite;
+        pointer-events: none;
+      }
+      @keyframes sparkle {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 0.9;
+        }
+      }
+
+      /* Sistema de Navegação */
+      .nav-helper {
+        position: fixed;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .nav-btn {
+        background: #1e3a8a;
+        color: white;
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
+      }
+      .nav-btn:hover,
+      .nav-btn:focus {
+        background: #3b82f6;
+        transform: scale(1.1);
+        outline: none;
+      }
+      .scroll-indicator {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1e3a8a;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 14px;
+        z-index: 1000;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .faq-card {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 0, 0, 0.8) 0%,
+          rgba(30, 58, 138, 0.1) 100%
+        );
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .faq-card:hover {
+        border-color: rgba(59, 130, 246, 0.6);
+        transform: translateY(-2px);
+      }
+
+      .faq-card.active {
+        border-color: rgba(59, 130, 246, 0.8);
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+      }
+
+      .faq-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+
+      .faq-content.active {
+        max-height: 500px;
+      }
+
+      .chevron {
+        transition: transform 0.3s ease;
+      }
+
+      .chevron.active {
+        transform: rotate(180deg);
+      }
+    </style>
+  </head>
+  <body class="animated-bg text-white min-h-screen">
+    <!-- Sistema de Navegação -->
+    <div class="nav-helper">
+      <button
+        class="nav-btn"
+        onclick="scrollToTop()"
+        title="Ir para o topo (Tecla: Home)"
+      >
+        <i class="fas fa-arrow-up"></i>
+      </button>
+      <button class="nav-btn" onclick="scrollUp()" title="Subir (Tecla: ↑)">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+      <button class="nav-btn" onclick="scrollDown()" title="Descer (Tecla: ↓)">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <button
+        class="nav-btn"
+        onclick="scrollToBottom()"
+        title="Ir para o final (Tecla: End)"
+      >
+        <i class="fas fa-arrow-down"></i>
+      </button>
+    </div>
+
+    <div class="scroll-indicator">Use ↑↓ ou clique nos botões para navegar</div>
+
+    <!-- Navigation -->
+    <nav
+      class="bg-black/95 backdrop-blur-sm fixed w-full z-50 border-b border-blue-500/20"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <a
+                href="index.html"
+                class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+              >
+                Sky Apps
+              </a>
+            </div>
+          </div>
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-8">
+              <a
+                href="index.html"
+                class="hover:text-primary transition-colors duration-300"
+                >Início</a
+              >
+              <a
+                href="planos.html"
+                class="hover:text-primary transition-colors duration-300"
+                >Planos</a
+              >
+              <a href="perguntas.html" class="text-primary font-semibold"
+                >FAQ</a
+              >
+              <a
+                href="https://discord.gg/38Ef5TVMGR"
+                class="hover:text-primary transition-colors duration-300"
+                >Discord</a
+              >
+              <a
+                href="login.html"
+                class="bg-primary hover:bg-blue-600 px-4 py-2 rounded-lg transition-colors duration-300"
+                >Login</a
+              >
+            </div>
+          </div>
+          <div class="md:hidden">
+            <button class="text-gray-300 hover:text-white">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="pt-32 pb-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1
+          class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+        >
+          Perguntas Frequentes
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-300 mb-12 max-w-4xl mx-auto">
+          Encontre respostas para as dúvidas mais comuns sobre nossos bots
+          Discord. Se não encontrar o que procura, entre em contato conosco!
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="pb-20">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="space-y-4">
+          <!-- FAQ Item 1 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-question-circle text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">O que é o Sky Apps?</h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                O Sky Apps é uma plataforma completa de bots Discord que oferece
+                soluções de verificação OAuth2 e vendas automatizadas para
+                transformar seu servidor em um negócio lucrativo.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 2 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-shield-alt text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Como funciona o Bot OAuth2?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                O Bot OAuth2 utiliza a autenticação oficial do Discord para
+                verificar usuários automaticamente, protegendo seu servidor
+                contra spam, bots maliciosos e usuários não autorizados.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 3 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-shopping-cart text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  O que o Bot de Vendas pode fazer?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                O Bot de Vendas automatiza todo o processo de vendas: aceita
+                pagamentos via PIX, cartão e PayPal, entrega produtos digitais
+                automaticamente, gerencia estoque e fornece relatórios
+                detalhados.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 4 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-money-bill-wave text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Quais são os preços dos planos?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                O Bot OAuth2 é completamente GRATUITO. O Bot de Vendas custa R$
+                5,00/mês. Oferecemos também um combo completo por R$ 4,00/mês,
+                economizando R$ 1,00.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 5 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-credit-card text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Quais formas de pagamento vocês aceitam?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Aceitamos PIX, cartão de crédito, cartão de débito e PayPal. O
+                pagamento é processado de forma segura e automática mensalmente.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 6 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-clock text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Há período de teste gratuito?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! Oferecemos 7 dias de teste gratuito para o Bot de Vendas.
+                Você pode cancelar a qualquer momento durante o período de teste
+                sem cobrança.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 7 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-cog text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Como configurar os bots no meu servidor?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                A configuração é simples! Após a contratação, você receberá um
+                link de convite e acesso ao dashboard web intuitivo onde pode
+                configurar tudo em poucos cliques.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 8 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-headset text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Vocês oferecem suporte técnico?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! Oferecemos suporte 24/7 via Discord e chat. Clientes do Bot
+                de Vendas têm suporte prioritário com tempo de resposta ainda
+                mais rápido.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 9 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-server text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Quantos servidores posso usar os bots?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Cada plano permite o uso em 1 servidor Discord. Para usar em
+                múltiplos servidores, você precisará de planos adicionais ou
+                pode entrar em contato para planos empresariais.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 10 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-ban text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso cancelar minha assinatura?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Claro! Você pode cancelar sua assinatura a qualquer momento
+                através do dashboard. O bot continuará funcionando até o final
+                do período pago.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 11 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-chart-line text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Como acompanhar minhas vendas?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                O Bot de Vendas inclui um dashboard avançado com analytics
+                detalhados, relatórios de vendas, gráficos de performance e
+                notificações em tempo real.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 12 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-box text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Que tipos de produtos posso vender?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Você pode vender produtos digitais como: contas de jogos,
+                softwares, cursos, ebooks, templates, códigos, chaves de
+                ativação e qualquer arquivo digital.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 13 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-users text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Quantos usuários podem ser verificados?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Não há limite! O Bot OAuth2 pode verificar quantos usuários
+                forem necessários, desde pequenos servidores até comunidades com
+                milhares de membros.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 14 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-lock text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">Os bots são seguros?</h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Absolutamente! Nossos bots seguem todas as diretrizes do
+                Discord, usam criptografia avançada e são auditados regularmente
+                para garantir máxima segurança.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 15 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-sync text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Os bots recebem atualizações?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! Todos os bots recebem atualizações automáticas com novos
+                recursos, melhorias de segurança e correções, sem interrupção do
+                serviço.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 16 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-mobile-alt text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso gerenciar pelo celular?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Claro! O dashboard é totalmente responsivo e funciona
+                perfeitamente em celulares, tablets e computadores. Gerencie
+                suas vendas de qualquer lugar!
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 17 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-percentage text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Vocês cobram taxa sobre as vendas?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Não! Cobramos apenas a mensalidade do plano. Todo o lucro das
+                suas vendas é 100% seu. Apenas os gateways de pagamento cobram
+                suas taxas padrão.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 18 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-language text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Os bots funcionam em outros idiomas?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Atualmente nossos bots estão em português brasileiro, mas
+                estamos trabalhando para adicionar suporte a inglês e espanhol
+                em breve.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 19 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-download text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Como funciona a entrega automática?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Após o pagamento confirmado, o bot envia automaticamente o
+                produto via DM para o comprador e adiciona os cargos
+                configurados no servidor.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 20 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-tags text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso criar cupons de desconto?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! O Bot de Vendas permite criar cupons personalizados com
+                desconto percentual ou valor fixo, com limite de uso e data de
+                expiração.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 21 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-bell text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Recebo notificações das vendas?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! Você recebe notificações em tempo real no Discord sempre
+                que uma venda é realizada, incluindo detalhes do produto e
+                valor.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 22 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-warehouse text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Como funciona o controle de estoque?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                O bot gerencia automaticamente o estoque, removendo produtos
+                vendidos e pausando vendas quando o estoque acaba. Você recebe
+                alertas de estoque baixo.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 23 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-user-friends text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso ter um sistema de afiliados?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! O Bot de Vendas inclui um sistema completo de afiliados
+                onde você pode definir comissões e acompanhar o desempenho dos
+                seus parceiros.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 24 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-palette text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso personalizar as mensagens dos bots?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Absolutamente! Você pode personalizar todas as mensagens,
+                embeds, cores e até adicionar sua logo nas mensagens dos bots.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 25 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-history text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso ver o histórico de vendas?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! O dashboard mantém um histórico completo de todas as vendas
+                com filtros por data, produto, valor e comprador para análises
+                detalhadas.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 26 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-shield-virus text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Como o bot protege contra fraudes?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Nossos bots incluem sistemas anti-fraude, verificação de
+                pagamentos, blacklist automática e integração com sistemas de
+                segurança dos gateways.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 27 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-exchange-alt text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso trocar de plano depois?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Claro! Você pode fazer upgrade ou downgrade do seu plano a
+                qualquer momento. As mudanças são aplicadas imediatamente no seu
+                próximo ciclo de cobrança.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 28 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-robot text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Os bots ficam online 24/7?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! Nossos bots são hospedados em servidores de alta
+                disponibilidade e ficam online 24 horas por dia, 7 dias por
+                semana, com uptime de 99.9%.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 29 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-file-export text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso exportar meus dados?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! Você pode exportar todos os seus dados de vendas, clientes
+                e relatórios em formato CSV ou Excel a qualquer momento.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 30 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-key text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Como funciona a entrega de chaves/códigos?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Você pode cadastrar listas de chaves/códigos no sistema. O bot
+                entrega automaticamente uma chave única para cada compra e marca
+                como usada.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 31 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-star text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso ter avaliações dos produtos?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! O sistema inclui um módulo de avaliações onde compradores
+                podem deixar feedback e estrelas para seus produtos.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 32 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-calendar-alt text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">Posso agendar promoções?</h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Claro! Você pode agendar promoções, alterar preços
+                automaticamente em datas específicas e criar campanhas de
+                marketing temporárias.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 33 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-link text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso integrar com outras ferramentas?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! Oferecemos integrações com webhooks, APIs e ferramentas
+                populares como Google Sheets, Zapier e sistemas de CRM.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 34 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-globe text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Funciona em qualquer país?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Nossos bots funcionam globalmente! Porém, os métodos de
+                pagamento podem variar por região. PIX é exclusivo do Brasil,
+                mas cartões e PayPal funcionam mundialmente.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 35 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-graduation-cap text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Vocês oferecem treinamento?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! Oferecemos tutoriais em vídeo, documentação completa e
+                sessões de treinamento ao vivo para ajudar você a maximizar o
+                uso dos bots.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 36 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-backup text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">Meus dados ficam seguros?</h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Absolutamente! Fazemos backup diário de todos os dados, usamos
+                criptografia SSL e seguimos as melhores práticas de segurança da
+                indústria.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 37 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-coins text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso vender em outras moedas?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! O bot suporta múltiplas moedas incluindo Real (BRL), Dólar
+                (USD), Euro (EUR) e outras, com conversão automática de valores.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 38 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-chart-pie text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Que tipo de relatórios posso gerar?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Você pode gerar relatórios de vendas, produtos mais vendidos,
+                receita por período, performance de afiliados, conversão de
+                cupons e muito mais.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 39 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-hammer text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso personalizar comandos dos bots?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! Você pode personalizar prefixos, nomes de comandos,
+                permissões e criar comandos customizados para suas necessidades
+                específicas.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 40 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-gift text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso criar produtos gratuitos/brindes?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Claro! Você pode criar produtos com valor R$ 0,00 para
+                distribuir brindes, amostras grátis ou recompensas para sua
+                comunidade.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 41 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-stopwatch text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Qual o tempo de resposta do suporte?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Nosso suporte padrão responde em até 2 horas. Clientes do Bot de
+                Vendas têm suporte prioritário com resposta em até 30 minutos.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 42 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-code text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Preciso saber programar para usar?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Não! Nossos bots são 100% plug-and-play. Toda configuração é
+                feita através de interface gráfica intuitiva, sem necessidade de
+                código.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 43 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-search text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso ter catálogo de produtos?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! O bot cria automaticamente um catálogo organizado por
+                categorias, com sistema de busca, filtros e visualização
+                detalhada dos produtos.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 44 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-undo text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Como funciona o sistema de reembolso?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Você pode configurar políticas de reembolso personalizadas. O
+                bot pode processar reembolsos automaticamente ou enviar para
+                aprovação manual.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 45 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-volume-up text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso fazer anúncios automáticos?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Sim! O bot pode enviar anúncios automáticos de produtos,
+                promoções e novidades em canais específicos com frequência
+                configurável.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 46 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-layer-group text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso ter produtos em pacotes/bundles?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Claro! Você pode criar pacotes combinando múltiplos produtos com
+                desconto especial, aumentando o valor médio das vendas.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 47 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-rocket text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Que novos recursos estão chegando?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Estamos trabalhando em: sistema de assinaturas recorrentes,
+                marketplace integrado, app mobile, IA para atendimento e
+                integração com mais gateways de pagamento.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 48 -->
+          <div class="faq-card rounded-xl p-6" onclick="toggleFAQ(this)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-lightbulb text-primary text-xl mr-4"></i>
+                <h3 class="text-lg font-semibold">
+                  Posso sugerir novos recursos?
+                </h3>
+              </div>
+              <i class="fas fa-chevron-down chevron text-primary"></i>
+            </div>
+            <div class="faq-content mt-4">
+              <p class="text-gray-300 pl-10">
+                Claro! Adoramos feedback dos usuários. Temos um sistema de
+                votação para recursos onde a comunidade decide as próximas
+                funcionalidades a serem desenvolvidas.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-blue-500/20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div class="col-span-1 md:col-span-2">
+            <h3 class="text-2xl font-bold text-blue-400 mb-4">Sky Apps</h3>
+            <p class="text-gray-300 mb-6 max-w-md">
+              Transformamos servidores Discord em negócios lucrativos através de
+              automação inteligente e ferramentas profissionais de última
+              geração.
+            </p>
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="text-gray-300 hover:text-primary transition-colors duration-300"
+              >
+                <i class="fab fa-discord text-2xl"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-300 hover:text-primary transition-colors duration-300"
+              >
+                <i class="fab fa-twitter text-2xl"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-300 hover:text-primary transition-colors duration-300"
+              >
+                <i class="fab fa-instagram text-2xl"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-300 hover:text-primary transition-colors duration-300"
+              >
+                <i class="fab fa-youtube text-2xl"></i>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4 text-primary">Links Good</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="index.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Início</a
+                >
+              </li>
+              <li>
+                <a
+                  href="planos.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Planos</a
+                >
+              </li>
+              <li>
+                <a
+                  href="perguntas.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >FAQ</a
+                >
+              </li>
+              <li>
+                <a
+                  href="dashboard.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Dashboard</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4 text-primary">Suporte Off</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Documentação</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Tutoriais</a
+                >
+              </li>
+              <li>
+                <a
+                  href="perguntas.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >FAQ</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Contato</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="border-t border-blue-500/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center"
+        >
+          <p class="text-gray-300 text-sm">
+            © 2024 Sky Apps. Todos os direitos reservados.
+          </p>
+          <div class="flex space-x-6 mt-4 md:mt-0">
+            <a
+              href="#"
+              class="text-gray-300 hover:text-white text-sm transition-colors duration-300"
+              >Termos de Uso</a
+            >
+            <a
+              href="#"
+              class="text-gray-300 hover:text-white text-sm transition-colors duration-300"
+              >Política de Privacidade</a
+            >
+            <a
+              href="#"
+              class="text-gray-300 hover:text-white text-sm transition-colors duration-300"
+              >Cookies</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Sistema de Navegação
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function scrollToBottom() {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+
+      function scrollUp() {
+        window.scrollBy({ top: -300, behavior: "smooth" });
+      }
+
+      function scrollDown() {
+        window.scrollBy({ top: 300, behavior: "smooth" });
+      }
+
+      // Função para expandir/recolher FAQ
+      function toggleFAQ(element) {
+        const content = element.querySelector(".faq-content");
+        const chevron = element.querySelector(".chevron");
+
+        // Toggle classes
+        element.classList.toggle("active");
+        content.classList.toggle("active");
+        chevron.classList.toggle("active");
+      }
+
+      // Navegação por teclado
+      document.addEventListener("keydown", function (e) {
+        switch (e.key) {
+          case "ArrowUp":
+            e.preventDefault();
+            scrollUp();
+            break;
+          case "ArrowDown":
+            e.preventDefault();
+            scrollDown();
+            break;
+          case "Home":
+            e.preventDefault();
+            scrollToTop();
+            break;
+          case "End":
+            e.preventDefault();
+            scrollToBottom();
+            break;
+          case "PageUp":
+            e.preventDefault();
+            window.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
+            break;
+          case "PageDown":
+            e.preventDefault();
+            window.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+            break;
+        }
+      });
+
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Esconder indicador após alguns segundos
+      setTimeout(() => {
+        const indicator = document.querySelector(".scroll-indicator");
+        if (indicator) {
+          indicator.style.opacity = "0";
+          setTimeout(() => indicator.remove(), 500);
+        }
+      }, 5000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Sky Apps</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#3B82F6",
+              secondary: "#60A5FA",
+              dark: "#000000",
+              darker: "#000000",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .animated-bg {
+        background: #000000;
+        position: relative;
+        overflow: hidden;
+      }
+      .animated-bg::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(
+            4px 4px at 20px 30px,
+            #1e3a8a,
+            transparent
+          ),
+          radial-gradient(4px 4px at 40px 70px, #1e40af, transparent),
+          radial-gradient(3px 3px at 90px 40px, #1e3a8a, transparent),
+          radial-gradient(3px 3px at 130px 80px, #1e40af, transparent),
+          radial-gradient(4px 4px at 160px 30px, #1e3a8a, transparent),
+          radial-gradient(3px 3px at 200px 60px, #1e40af, transparent),
+          radial-gradient(4px 4px at 250px 20px, #1e3a8a, transparent);
+        background-repeat: repeat;
+        background-size: 300px 150px;
+        animation: sparkle 2.5s linear infinite;
+        pointer-events: none;
+      }
+      @keyframes sparkle {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 0.9;
+        }
+      }
+
+      /* Sistema de Navegação */
+      .nav-helper {
+        position: fixed;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .nav-btn {
+        background: #1e3a8a;
+        color: white;
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
+      }
+      .nav-btn:hover,
+      .nav-btn:focus {
+        background: #3b82f6;
+        transform: scale(1.1);
+        outline: none;
+      }
+      .scroll-indicator {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1e3a8a;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 14px;
+        z-index: 1000;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .login-card {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 0, 0, 0.9) 0%,
+          rgba(30, 58, 138, 0.2) 100%
+        );
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+
+      .social-btn {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 0, 0, 0.8) 0%,
+          rgba(30, 58, 138, 0.1) 100%
+        );
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .social-btn:hover {
+        border-color: rgba(59, 130, 246, 0.6);
+        transform: translateY(-2px);
+      }
+
+      .social-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .notification {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: linear-gradient(
+          135deg,
+          rgba(220, 38, 38, 0.9) 0%,
+          rgba(153, 27, 27, 0.9) 100%
+        );
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(220, 38, 38, 0.5);
+        border-radius: 12px;
+        padding: 16px 20px;
+        color: white;
+        z-index: 1001;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        cursor: grab;
+        user-select: none;
+        max-width: 300px;
+      }
+
+      .notification.show {
+        transform: translateX(0);
+      }
+
+      .notification.dragging {
+        cursor: grabbing;
+      }
+
+      .form-input {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        color: white;
+        transition: all 0.3s ease;
+      }
+
+      .form-input:focus {
+        border-color: rgba(59, 130, 246, 0.8);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+      }
+
+      .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .user-info {
+        background: linear-gradient(
+          135deg,
+          rgba(34, 197, 94, 0.2) 0%,
+          rgba(22, 163, 74, 0.2) 100%
+        );
+        border: 1px solid rgba(34, 197, 94, 0.3);
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-in;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .slide-out {
+        animation: slideOut 0.3s ease-out forwards;
+      }
+
+      @keyframes slideOut {
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body class="animated-bg text-white min-h-screen">
+    <!-- Sistema de Navegação -->
+    <div class="nav-helper">
+      <button
+        class="nav-btn"
+        onclick="scrollToTop()"
+        title="Ir para o topo (Tecla: Home)"
+      >
+        <i class="fas fa-arrow-up"></i>
+      </button>
+      <button class="nav-btn" onclick="scrollUp()" title="Subir (Tecla: ↑)">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+      <button class="nav-btn" onclick="scrollDown()" title="Descer (Tecla: ↓)">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <button
+        class="nav-btn"
+        onclick="scrollToBottom()"
+        title="Ir para o final (Tecla: End)"
+      >
+        <i class="fas fa-arrow-down"></i>
+      </button>
+    </div>
+
+    <div class="scroll-indicator">Use ↑↓ ou clique nos botões para navegar</div>
+
+    <!-- Navigation -->
+    <nav
+      class="bg-black/95 backdrop-blur-sm fixed w-full z-50 border-b border-blue-500/20"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <a
+                href="index.html"
+                class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+              >
+                Sky Apps
+              </a>
+            </div>
+          </div>
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-8">
+              <a
+                href="index.html"
+                class="hover:text-primary transition-colors duration-300"
+                >Início</a
+              >
+              <a
+                href="planos.html"
+                class="hover:text-primary transition-colors duration-300"
+                >Planos</a
+              >
+              <a
+                href="perguntas.html"
+                class="hover:text-primary transition-colors duration-300"
+                >FAQ</a
+              >
+              <a
+                href="#discord"
+                class="hover:text-primary transition-colors duration-300"
+                >Discord</a
+              >
+              <a href="login.html" class="text-primary font-semibold">Login</a>
+            </div>
+          </div>
+          <div class="md:hidden">
+            <button class="text-gray-300 hover:text-white">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="pt-32 pb-20 min-h-screen flex items-center justify-center">
+      <div class="max-w-md w-full mx-4">
+        <!-- Login Card -->
+        <div id="loginCard" class="login-card rounded-2xl p-8">
+          <div class="text-center mb-8">
+            <h1
+              class="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+            >
+              Entrar
+            </h1>
+            <p class="text-gray-300">Acesse sua conta Sky Apps</p>
+          </div>
+
+          <!-- Social Login Buttons -->
+          <div class="space-y-4 mb-8">
+            <button
+              onclick="loginWithProvider('discord')"
+              class="social-btn w-full p-4 rounded-xl flex items-center justify-center space-x-3 hover:scale-105 transition-all duration-300"
+            >
+              <i class="fab fa-discord text-2xl text-indigo-400"></i>
+              <span class="font-semibold">Continuar com Discord</span>
+            </button>
+
+            <button
+              onclick="loginWithProvider('github')"
+              class="social-btn w-full p-4 rounded-xl flex items-center justify-center space-x-3 hover:scale-105 transition-all duration-300"
+            >
+              <i class="fab fa-github text-2xl text-gray-300"></i>
+              <span class="font-semibold">Continuar com GitHub</span>
+            </button>
+
+            <button
+              onclick="loginWithProvider('google')"
+              class="social-btn w-full p-4 rounded-xl flex items-center justify-center space-x-3 hover:scale-105 transition-all duration-300"
+            >
+              <i class="fab fa-google text-2xl text-red-400"></i>
+              <span class="font-semibold">Continuar com Gmail</span>
+            </button>
+
+            <button
+              onclick="loginWithProvider('phone')"
+              class="social-btn w-full p-4 rounded-xl flex items-center justify-center space-x-3 hover:scale-105 transition-all duration-300"
+            >
+              <i class="fas fa-phone text-2xl text-green-400"></i>
+              <span class="font-semibold">Continuar com Telefone</span>
+            </button>
+          </div>
+
+          <!-- Login Form (Hidden initially) -->
+          <div id="loginForm" class="hidden">
+            <div class="mb-6">
+              <label
+                id="inputLabel"
+                class="block text-sm font-medium text-gray-300 mb-2"
+                >Email</label
+              >
+              <input
+                type="text"
+                id="loginInput"
+                class="form-input w-full px-4 py-3 rounded-xl"
+                placeholder="Digite seu email"
+              />
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-300 mb-2"
+                >Senha</label
+              >
+              <input
+                type="password"
+                id="passwordInput"
+                class="form-input w-full px-4 py-3 rounded-xl"
+                placeholder="Digite sua senha"
+              />
+            </div>
+
+            <button
+              onclick="attemptLogin()"
+              class="w-full bg-primary hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 mb-4"
+            >
+              Entrar
+            </button>
+
+            <button
+              onclick="backToSocialLogin()"
+              class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-xl transition-all duration-300"
+            >
+              Voltar
+            </button>
+          </div>
+
+          <!-- Create Account Link -->
+          <div class="text-center mt-8 pt-6 border-t border-blue-500/20">
+            <p class="text-gray-300 mb-4">Não tem uma conta?</p>
+            <button
+              onclick="showCreateAccount()"
+              class="text-primary hover:text-secondary font-semibold transition-colors duration-300"
+            >
+              Criar conta gratuita
+            </button>
+          </div>
+        </div>
+
+        <!-- User Info Card (Hidden initially) -->
+        <div id="userInfo" class="user-info rounded-2xl p-8 hidden fade-in">
+          <div class="text-center">
+            <div
+              class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center"
+            >
+              <i class="fas fa-user text-2xl text-white"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2 text-green-400">
+              Login realizado!
+            </h2>
+            <p class="text-gray-300 mb-4">Bem-vindo de volta!</p>
+
+            <div class="bg-black/30 rounded-xl p-4 mb-6">
+              <p class="text-sm text-gray-400 mb-1">Logado como:</p>
+              <p id="userDisplay" class="text-lg font-semibold text-white"></p>
+              <p id="userName" class="text-primary"></p>
+            </div>
+
+            <button
+              onclick="logout()"
+              class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-xl transition-all duration-300"
+            >
+              Sair da conta
+            </button>
+          </div>
+        </div>
+
+        <!-- Create Account Card (Hidden initially) -->
+        <div id="createAccountCard" class="login-card rounded-2xl p-8 hidden">
+          <div class="text-center mb-8">
+            <h1
+              class="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+            >
+              Criar Conta
+            </h1>
+            <p class="text-gray-300">Junte-se ao Sky Apps gratuitamente</p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2"
+                >Nome completo</label
+              >
+              <input
+                type="text"
+                id="createName"
+                class="form-input w-full px-4 py-3 rounded-xl"
+                placeholder="Digite seu nome completo"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2"
+                >Email</label
+              >
+              <input
+                type="email"
+                id="createEmail"
+                class="form-input w-full px-4 py-3 rounded-xl"
+                placeholder="Digite seu email"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2"
+                >Telefone</label
+              >
+              <input
+                type="tel"
+                id="createPhone"
+                class="form-input w-full px-4 py-3 rounded-xl"
+                placeholder="Digite seu telefone"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2"
+                >Senha</label
+              >
+              <input
+                type="password"
+                id="createPassword"
+                class="form-input w-full px-4 py-3 rounded-xl"
+                placeholder="Digite sua senha"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2"
+                >Confirmar senha</label
+              >
+              <input
+                type="password"
+                id="confirmPassword"
+                class="form-input w-full px-4 py-3 rounded-xl"
+                placeholder="Confirme sua senha"
+              />
+            </div>
+
+            <button
+              onclick="createAccount()"
+              class="w-full bg-primary hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 mt-6"
+            >
+              Criar conta
+            </button>
+
+            <button
+              onclick="backToLogin()"
+              class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-xl transition-all duration-300"
+            >
+              Voltar ao login
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-blue-500/20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div class="col-span-1 md:col-span-2">
+            <h3 class="text-2xl font-bold text-blue-400 mb-4">Sky Apps</h3>
+            <p class="text-gray-300 mb-6 max-w-md">
+              Transformamos servidores Discord em negócios lucrativos através de
+              automação inteligente e ferramentas profissionais de última
+              geração.
+            </p>
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="text-gray-300 hover:text-primary transition-colors duration-300"
+              >
+                <i class="fab fa-discord text-2xl"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-300 hover:text-primary transition-colors duration-300"
+              >
+                <i class="fab fa-twitter text-2xl"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-300 hover:text-primary transition-colors duration-300"
+              >
+                <i class="fab fa-instagram text-2xl"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-300 hover:text-primary transition-colors duration-300"
+              >
+                <i class="fab fa-youtube text-2xl"></i>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4 text-primary">Links Good</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="index.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Início</a
+                >
+              </li>
+              <li>
+                <a
+                  href="planos.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Planos</a
+                >
+              </li>
+              <li>
+                <a
+                  href="perguntas.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >FAQ</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#dashboard"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Dashboard</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4 text-primary">Suporte</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Documentação</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Tutoriais</a
+                >
+              </li>
+              <li>
+                <a
+                  href="perguntas.html"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >FAQ</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors duration-300"
+                  >Contato</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="border-t border-blue-500/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center"
+        >
+          <p class="text-gray-300 text-sm">
+            © 2024 Sky Apps. Todos os direitos reservados.
+          </p>
+          <div class="flex space-x-6 mt-4 md:mt-0">
+            <a
+              href="#"
+              class="text-gray-300 hover:text-white text-sm transition-colors duration-300"
+              >Termos de Uso</a
+            >
+            <a
+              href="#"
+              class="text-gray-300 hover:text-white text-sm transition-colors duration-300"
+              >Política de Privacidade</a
+            >
+            <a
+              href="#"
+              class="text-gray-300 hover:text-white text-sm transition-colors duration-300"
+              >Cookies</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Simulação do banco de dados (databasejson/users.json)
+      const usersDatabase = {
+        users: [
+          {
+            id: 1,
+            name: "João Silva",
+            email: "joao@gmail.com",
+            phone: "11999887766",
+            password: "123456",
+          },
+          {
+            id: 2,
+            name: "Maria Santos",
+            email: "maria@gmail.com",
+            phone: "11888776655",
+            password: "senha123",
+          },
+          {
+            id: 3,
+            name: "Pedro Costa",
+            email: "pedro@gmail.com",
+            phone: "11777665544",
+            password: "minhasenha",
+          },
+        ],
+      };
+
+      let currentLoginType = "";
+      let isDragging = false;
+      let startX = 0;
+      let currentX = 0;
+
+      // Sistema de Navegação
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function scrollToBottom() {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+
+      function scrollUp() {
+        window.scrollBy({ top: -300, behavior: "smooth" });
+      }
+
+      function scrollDown() {
+        window.scrollBy({ top: 300, behavior: "smooth" });
+      }
+
+      // Função para carregar dados do databasejson
+      async function loadUsersFromDatabase() {
+        try {
+          // Em um ambiente real, isso faria uma requisição para databasejson/users.json
+          // const response = await fetch('databasejson/users.json');
+          // const data = await response.json();
+          // return data;
+
+          // Por enquanto, retorna os dados simulados
+          console.log("Carregando dados do databasejson/users.json...");
+          return usersDatabase;
+        } catch (error) {
+          console.error("Erro ao carregar dados do databasejson:", error);
+          return usersDatabase; // Fallback para dados simulados
+        }
+      }
+
+      // Função para salvar dados no databasejson
+      async function saveUsersToDatabase(userData) {
+        try {
+          // Em um ambiente real, isso faria uma requisição POST para salvar em databasejson/users.json
+          // const response = await fetch('databasejson/users.json', {
+          //     method: 'POST',
+          //     headers: { 'Content-Type': 'application/json' },
+          //     body: JSON.stringify(userData)
+          // });
+
+          console.log("Salvando dados no databasejson/users.json...", userData);
+          usersDatabase.users.push(userData);
+          return true;
+        } catch (error) {
+          console.error("Erro ao salvar dados no databasejson:", error);
+          return false;
+        }
+      }
+
+      // Função para mostrar notificação
+      function showNotification(message, provider) {
+        const notification = document.createElement("div");
+        notification.className = "notification";
+        notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-exclamation-triangle text-red-400 text-xl"></i>
+                    <div>
+                        <p class="font-semibold">${provider} indisponível</p>
+                        <p class="text-sm opacity-90">${message}</p>
+                    </div>
+                </div>
+            `;
+
+        document.body.appendChild(notification);
+
+        // Mostrar notificação
+        setTimeout(() => {
+          notification.classList.add("show");
+        }, 100);
+
+        // Adicionar eventos de arrastar
+        addDragEvents(notification);
+
+        // Auto remover após 5 segundos
+        setTimeout(() => {
+          if (document.body.contains(notification)) {
+            removeNotification(notification);
+          }
+        }, 5000);
+      }
+
+      // Adicionar eventos de arrastar
+      function addDragEvents(notification) {
+        notification.addEventListener("mousedown", startDrag);
+        notification.addEventListener("touchstart", startDrag);
+      }
+
+      function startDrag(e) {
+        isDragging = true;
+        const notification = e.currentTarget;
+        notification.classList.add("dragging");
+
+        startX = e.type === "mousedown" ? e.clientX : e.touches[0].clientX;
+
+        document.addEventListener("mousemove", drag);
+        document.addEventListener("touchmove", drag);
+        document.addEventListener("mouseup", endDrag);
+        document.addEventListener("touchend", endDrag);
+      }
+
+      function drag(e) {
+        if (!isDragging) return;
+
+        currentX =
+          (e.type === "mousemove" ? e.clientX : e.touches[0].clientX) - startX;
+
+        if (currentX > 0) {
+          const notification = document.querySelector(".notification.dragging");
+          if (notification) {
+            notification.style.transform = `translateX(${currentX}px)`;
+          }
+        }
+      }
+
+      function endDrag() {
+        if (!isDragging) return;
+
+        const notification = document.querySelector(".notification.dragging");
+        if (notification) {
+          notification.classList.remove("dragging");
+
+          if (currentX > 100) {
+            removeNotification(notification);
+          } else {
+            notification.style.transform = "translateX(0)";
+          }
+        }
+
+        isDragging = false;
+        currentX = 0;
+
+        document.removeEventListener("mousemove", drag);
+        document.removeEventListener("touchmove", drag);
+        document.removeEventListener("mouseup", endDrag);
+        document.removeEventListener("touchend", endDrag);
+      }
+
+      function removeNotification(notification) {
+        notification.classList.add("slide-out");
+        setTimeout(() => {
+          if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+          }
+        }, 300);
+      }
+
+      // Função para login com provedores
+      function loginWithProvider(provider) {
+        switch (provider) {
+          case "discord":
+            showNotification(
+              "O Discord está fora de área no momento. Tente novamente mais tarde.",
+              "Discord"
+            );
+            break;
+          case "github":
+            showNotification(
+              "O GitHub está fora de área no momento. Tente novamente mais tarde.",
+              "GitHub"
+            );
+            break;
+          case "google":
+            currentLoginType = "email";
+            showLoginForm("Email", "Digite seu email");
+            break;
+          case "phone":
+            currentLoginType = "phone";
+            showLoginForm("Telefone", "Digite seu telefone");
+            break;
+        }
+      }
+
+      // Mostrar formulário de login
+      function showLoginForm(label, placeholder) {
+        document
+          .getElementById("loginCard")
+          .querySelector(".space-y-4").style.display = "none";
+        document.getElementById("loginForm").classList.remove("hidden");
+        document.getElementById("inputLabel").textContent = label;
+        document.getElementById("loginInput").placeholder = placeholder;
+        document.getElementById("loginInput").type =
+          currentLoginType === "email" ? "email" : "tel";
+      }
+
+      // Voltar para login social
+      function backToSocialLogin() {
+        document.getElementById("loginForm").classList.add("hidden");
+        document
+          .getElementById("loginCard")
+          .querySelector(".space-y-4").style.display = "block";
+        document.getElementById("loginInput").value = "";
+        document.getElementById("passwordInput").value = "";
+      }
+
+      // Tentar fazer login
+      async function attemptLogin() {
+        const input = document.getElementById("loginInput").value.trim();
+        const password = document.getElementById("passwordInput").value.trim();
+
+        if (!input || !password) {
+          showNotification("Por favor, preencha todos os campos.", "Erro");
+          return;
+        }
+
+        // Carregar dados do databasejson
+        const database = await loadUsersFromDatabase();
+
+        // Verificar no banco de dados
+        const user = database.users.find((u) => {
+          if (currentLoginType === "email") {
+            return u.email === input && u.password === password;
+          } else {
+            return u.phone === input && u.password === password;
+          }
+        });
+
+        if (user) {
+          // Login bem-sucedido
+          showUserInfo(user);
+        } else {
+          showNotification(
+            "Email/telefone ou senha incorretos.",
+            "Erro de login"
+          );
+        }
+      }
+
+      // Mostrar informações do usuário logado
+      function showUserInfo(user) {
+        document.getElementById("loginCard").style.display = "none";
+
+        const userInfo = document.getElementById("userInfo");
+        const userDisplay = document.getElementById("userDisplay");
+        const userName = document.getElementById("userName");
+
+        if (currentLoginType === "email") {
+          userDisplay.textContent =
+            user.email.substring(0, 2) + "***@" + user.email.split("@")[1];
+        } else {
+          userDisplay.textContent =
+            user.phone.substring(0, 2) +
+            "***" +
+            user.phone.substring(user.phone.length - 4);
+        }
+
+        userName.textContent = user.name;
+        userInfo.classList.remove("hidden");
+      }
+
+      // Logout
+      function logout() {
+        document.getElementById("userInfo").classList.add("hidden");
+        document.getElementById("loginCard").style.display = "block";
+        backToSocialLogin();
+      }
+
+      // Mostrar formulário de criar conta
+      function showCreateAccount() {
+        document.getElementById("loginCard").style.display = "none";
+        document.getElementById("createAccountCard").classList.remove("hidden");
+      }
+
+      // Voltar ao login
+      function backToLogin() {
+        document.getElementById("createAccountCard").classList.add("hidden");
+        document.getElementById("loginCard").style.display = "block";
+      }
+
+      // Criar conta
+      async function createAccount() {
+        const name = document.getElementById("createName").value.trim();
+        const email = document.getElementById("createEmail").value.trim();
+        const phone = document.getElementById("createPhone").value.trim();
+        const password = document.getElementById("createPassword").value.trim();
+        const confirmPassword = document
+          .getElementById("confirmPassword")
+          .value.trim();
+
+        if (!name || !email || !phone || !password || !confirmPassword) {
+          showNotification("Por favor, preencha todos os campos.", "Erro");
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showNotification("As senhas não coincidem.", "Erro");
+          return;
+        }
+
+        if (password.length < 6) {
+          showNotification("A senha deve ter pelo menos 6 caracteres.", "Erro");
+          return;
+        }
+
+        // Carregar dados atuais do databasejson
+        const database = await loadUsersFromDatabase();
+
+        // Verificar se email ou telefone já existem
+        const existingUser = database.users.find(
+          (u) => u.email === email || u.phone === phone
+        );
+        if (existingUser) {
+          showNotification("Email ou telefone já cadastrado.", "Erro");
+          return;
+        }
+
+        // Criar novo usuário
+        const newUser = {
+          id: database.users.length + 1,
+          name: name,
+          email: email,
+          phone: phone,
+          password: password,
+        };
+
+        // Salvar no databasejson
+        const saved = await saveUsersToDatabase(newUser);
+
+        if (saved) {
+          showNotification(
+            "Conta criada com sucesso! Faça login para continuar.",
+            "Sucesso"
+          );
+
+          // Limpar formulário e voltar ao login
+          document.getElementById("createName").value = "";
+          document.getElementById("createEmail").value = "";
+          document.getElementById("createPhone").value = "";
+          document.getElementById("createPassword").value = "";
+          document.getElementById("confirmPassword").value = "";
+
+          setTimeout(() => {
+            backToLogin();
+          }, 2000);
+        } else {
+          showNotification("Erro ao criar conta. Tente novamente.", "Erro");
+        }
+      }
+
+      // Navegação por teclado
+      document.addEventListener("keydown", function (e) {
+        switch (e.key) {
+          case "ArrowUp":
+            e.preventDefault();
+            scrollUp();
+            break;
+          case "ArrowDown":
+            e.preventDefault();
+            scrollDown();
+            break;
+          case "Home":
+            e.preventDefault();
+            scrollToTop();
+            break;
+          case "End":
+            e.preventDefault();
+            scrollToBottom();
+            break;
+          case "PageUp":
+            e.preventDefault();
+            window.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
+            break;
+          case "PageDown":
+            e.preventDefault();
+            window.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+            break;
+          case "Enter":
+            // Se estiver no formulário de login, tentar fazer login
+            if (
+              !document.getElementById("loginForm").classList.contains("hidden")
+            ) {
+              e.preventDefault();
+              attemptLogin();
+            }
+            break;
+          case "Escape":
+            // Voltar ao login principal se estiver em algum formulário
+            if (
+              !document.getElementById("loginForm").classList.contains("hidden")
+            ) {
+              backToSocialLogin();
+            } else if (
+              !document
+                .getElementById("createAccountCard")
+                .classList.contains("hidden")
+            ) {
+              backToLogin();
+            }
+            break;
+        }
+      });
+
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Esconder indicador após alguns segundos
+      setTimeout(() => {
+        const indicator = document.querySelector(".scroll-indicator");
+        if (indicator) {
+          indicator.style.opacity = "0";
+          setTimeout(() => indicator.remove(), 500);
+        }
+      }, 5000);
+
+      // Inicializar carregamento dos dados ao carregar a página
+      window.addEventListener("load", async () => {
+        console.log("Página carregada. Conectando com databasejson...");
+        await loadUsersFromDatabase();
+      });
+    </script>
+  </body>
+</html>
